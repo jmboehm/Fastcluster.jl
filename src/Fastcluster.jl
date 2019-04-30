@@ -5,9 +5,13 @@ module Fastcluster
     ## Dependencies
     ##
     ##############################################################################
-    
-    using RCall
-    using JLD2
+
+    using Distances
+    using Cxx
+    using Libdl
+
+    #using RCall
+    #using JLD2
 
     ##############################################################################
     ##
@@ -15,7 +19,7 @@ module Fastcluster
     ##
     ##############################################################################
 
-    export hclust
+    export linkage
 
     ##############################################################################
     ##
@@ -23,8 +27,19 @@ module Fastcluster
     ##
     ##############################################################################
 
-    include("hclust.jl")
+    include("linkage.jl")
+
+    ##############################################################################
+    ##
+    ## Initialize Cxx
+    ##
+    ##############################################################################
+
+    function __init__()
+        path_to_lib = @__DIR__
+        addHeaderDir(path_to_lib, kind=C_System)
+        Libdl.dlopen(path_to_lib * "/libfastcluster.so", Libdl.RTLD_GLOBAL)
+        cxxinclude("fastcluster.h")
+    end
 
 end
-
-
