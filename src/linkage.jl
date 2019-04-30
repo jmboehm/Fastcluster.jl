@@ -60,15 +60,23 @@ function linkage(X::Array{T,2}; method::Symbol = :single, metric = Euclidean(), 
               :median    => 6 )
 
     nobs = size(X, 1)
-    merge = zeros(Int32,2*(nobs-1))
+    m = zeros(Int32,2*(nobs-1))
     height = zeros(Float64,nobs-1)
 
     D = pairwise(metric, X, dims=1)
     d = dist_to_vec(D)
 
-    @cxx hclust_fast(nobs, pointer(d), mthidx[method], pointer(merge), pointer(height) )
+    # Cxx.jl version
+    #@cxx hclust_fast(nobs, pointer(d), mthidx[method], pointer(m), pointer(height) )
 
-    return merge, height
+    # call the C function
+    t = ccall((:hclust_fast, "src/libfastcluster.so"),
+        Int32,
+        (Int32, Ptr{Cdouble},Int32, Ptr{Cdouble},Ptr{Cdouble}),
+        nobs, d, mthidx[method], m, height
+        )
+
+    return m, height
 
     #
     # o = Array{Int32,1}(undef, 2*(nobs-1))
@@ -88,13 +96,19 @@ end
 
 # This function returns the labels for the k-cluster cut.
 # Labels are between 0 and k-1.
-function cutree(merge::Vector{Int32}, nobs::Int64, k::Int64)
+function cutree(m::Vector{Int32}, nobs::Int64, k::Int64)
 
     # allocate memory for new array
     labels = Vector{Int32}(undef, nobs)
 
-    # do it
-    @cxx cutree_k(nobs, pointer(merge), k, pointer(labels))
+    # Cxx.jl version
+    #@cxx cutree_k(nobs, pointer(m), k, pointer(labels))
+
+    t = ccall((:cutree_k, "src/libfastcluster.so"),
+        Int32,
+        (Int32, Ptr{Cdouble}, Int32, Ptr{Cint}),
+        nobs, m, k, labels
+        )
 
     return labels
 
