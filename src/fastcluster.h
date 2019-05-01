@@ -6,11 +6,16 @@
 // License:   BSD style license
 //            (see the file LICENSE for details)
 //
+// modified for Julia interface by Johannes Boehm
 
 #ifndef fastclustercpp_H
 #define fastclustercpp_H
 
 extern "C" {
+
+  // This is a just a function that we call at initialization to
+  // make sure we can talk to the shared library
+  int validate(void);
 
   //
   // Assigns cluster labels (0, ..., nclust-1) to the n points such

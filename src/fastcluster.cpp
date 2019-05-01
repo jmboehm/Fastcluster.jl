@@ -33,6 +33,10 @@ bool fc_isnan(double x) { return false; }
 
 extern "C" {
 
+  int validate(void) {
+    return 42;
+  }
+
   void cutree_k(int n, const int* merge, int nclust, int* labels) {
 
     int k,m1,m2,j,l;
@@ -134,11 +138,11 @@ extern "C" {
   //
   int hclust_fast(int n, double* distmat, int method, int* merge, double* height) {
 
-    // // Operate on squared distances for these methods.
+    // Operate on squared distances for these methods.
     // if (method==HCLUST_METHOD_WARD ||
     //     method==HCLUST_METHOD_CENTROID ||
     //     method==HCLUST_METHOD_MEDIAN) {
-    //   for (t_float * DD = D_; DD!=D_+static_cast<std::ptrdiff_t>(N)*(N-1)/2;
+    //   for (t_float * DD = distmat; DD!=distmat+static_cast<std::ptrdiff_t>(n)*(n-1)/2;
     //        ++DD)
     //     *DD *= *DD;
     // }
@@ -174,12 +178,22 @@ extern "C" {
       NN_chain_core<METHOD_METR_WARD, t_float>(n, distmat, members, Z2);
       delete[] members;
     }
+    else if (method == HCLUST_METHOD_CENTROID) {
+      double* members = new double[n];
+      for (int i=0; i<n; i++) members[i] = 1;
+      generic_linkage<METHOD_METR_CENTROID, t_float>(n, distmat, members, Z2);
+      delete[] members;
+    }
+    // case METHOD_METR_CENTROID:
+    //     generic_linkage<METHOD_METR_CENTROID, t_float>(N, D__, members, Z2);
+    //     break;
     else {
       return 1;
     }
 
     int* order = new int[n];
-    if (method == HCLUST_METHOD_MEDIAN) {
+    if (method == HCLUST_METHOD_CENTROID ||
+        method == HCLUST_METHOD_MEDIAN) {
       generate_R_dendrogram<true>(merge, height, order, Z2, n);
     } else {
       generate_R_dendrogram<false>(merge, height, order, Z2, n);

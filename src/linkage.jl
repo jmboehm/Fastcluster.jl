@@ -9,48 +9,44 @@ function dist_to_vec(m::Array{T,2}) where {T<:Real}
     end
     v = T[]
     for c = 1:rows
-        for r = 1:(c-1)
+        for r = (c+1):rows
             push!(v,m[r,c])
         end
     end
     return v
 end
 
-# The optional argument 'preserve_input' specifies whether the method
-# makes a working copy of the dissimilarity vector or writes temporary
-# data into the existing array. If the dissimilarities are generated for
-# the clustering step only and are not needed afterward, approximately
-# half the memory can be saved by specifying 'preserve_input=False'. Note
-# that the input array X contains unspecified values after this procedure.
-# It is therefore safer to write
 #
-#   linkage(X, method=..., preserve_input=false)
-#   X = []
+# d::Array{Float64,2} is the dissimilarity matrix between the points to cluster. You
+#   can use the [Distances.jl](https://github.com/JuliaStats/Distances.jl) package to
+#   generate dissimilarity matrix.
+# method::Symbol is one of the following: `:single`, `:complete`, `:average`, `:weighted`, `:ward`, `:centroid`, `:median`.
 #
-# to make sure that the matrix X is not accessed accidentally after it has
-# been used as scratch memory. (The single linkage algorithm does not
-# write to the distance matrix or its copy anyway, so the 'preserve_input'
-# flag has no effect in this case.)
+# *NOTE:* The methods `:ward`, `:centroid`, and `:median` the function assumes that
+# the distance metric used is the squared Euclidean distance (e.g. `SqEuclidean()` in Distances.jl).
+# This is different to the R interface of fastcluster, which, for the `Ward.D2` method, operates on the
+# squares of the distances that are passed to the `hclust` function. (The Python interface operates on the
+# squares of the distances passed to the `linkage` function for all three methods, `:ward`, `:centroid`, and `:median`.)
+# We choose this way in order to save on memory.
+function linkage(d::Array{T,2}, method::Symbol) where {T<:Real}
+    return linkage_ext(d, method, false)
+end
 
-# If X contains vector data, it must be a two-dimensional array with N
-# observations in D dimensions as an (N×D) array. The preserve_input
-# argument is ignored in this case. The specified metric is used to
-# generate pairwise distances from the input. The following two function
-# calls yield the same output:
-#
-#   linkage(pdist(X, metric), method="...", preserve_input=False)
-#   linkage(X, metric=metric, method="...")
-#
-# For method=:ward, the function assumes that metric = SqEuclidean() will be chosen.
+# The linkage!(d::Array{T,2}, method::Symbol) version of the function
+# allows fastcluster to write in the memory occupied by `d` (without
+# restoring the memory to the original values afterwards. Use this
+# version if memory is scarce and you do not care about the content
+# of `d` afterwards.
+function linkage!(d::Array{T,2}, method::Symbol) where {T<:Real}
+    return linkage_ext(d, method, false)
+end
 
-function linkage(X::Array{T,2}; method::Symbol = :single, metric = Euclidean(), preserve_input::Bool = true) where {T<:Real}
+# preserve_input::Bool is an optional argument that, if set to `false`, allows
+#   fastcluster to write onto the memory occupied by `d`, thereby preserving
+#   memory.
+function linkage_ext(d::Array{T,2}, method::Symbol, preserve_input::Bool) where {T<:Real}
 
-    X = rand(Float64, 10, 2)
-    metric = SqEuclidean()
-    method = :ward
-
-    # actual code starts here
-
+    # dictionary for linkage methods, from fastcluster
     mthidx = Dict(:single => 0,
               :complete  => 1,
               :average   => 2,
@@ -59,12 +55,12 @@ function linkage(X::Array{T,2}; method::Symbol = :single, metric = Euclidean(), 
               :centroid  => 5,
               :median    => 6 )
 
-    nobs = size(X, 1)
+    nobs = size(d, 1)
     m = zeros(Int32,2*(nobs-1))
     height = zeros(Float64,nobs-1)
 
-    D = pairwise(metric, X, dims=1)
-    d = dist_to_vec(D)
+    # D = pairwise(metric, X, dims=1)
+    d2 = dist_to_vec(d)
 
     # Cxx.jl version
     #@cxx hclust_fast(nobs, pointer(d), mthidx[method], pointer(m), pointer(height) )
@@ -73,7 +69,7 @@ function linkage(X::Array{T,2}; method::Symbol = :single, metric = Euclidean(), 
     t = ccall((:hclust_fast, "src/libfastcluster.so"),
         Int32,
         (Int32, Ptr{Cdouble},Int32, Ptr{Cdouble},Ptr{Cdouble}),
-        nobs, d, mthidx[method], m, height
+        nobs, d2, mthidx[method], m, height
         )
 
     return m, height
@@ -93,9 +89,8 @@ function linkage(X::Array{T,2}; method::Symbol = :single, metric = Euclidean(), 
 
 end
 
-
 # This function returns the labels for the k-cluster cut.
-# Labels are between 0 and k-1.
+# Labels are between 1 and k.
 function cutree(m::Vector{Int32}, nobs::Int64, k::Int64)
 
     # allocate memory for new array
@@ -110,6 +105,10 @@ function cutree(m::Vector{Int32}, nobs::Int64, k::Int64)
         nobs, m, k, labels
         )
 
-    return labels
+    labels .+= 1
+    # convert this to Int64, better to use in Julia
+    labels64::Vector{Int64} = labels
+
+    return labels64
 
 end
