@@ -4,7 +4,9 @@ Julia wrapper to Daniel Muellner's [fastcluster](http://danifold.net/fastcluster
 
 ## Installation
 
-As of now, this is only tested under OSX with gcc clang. Clone the repo, and run the makefile in `/src`.
+```julia
+Pkg.clone("http://github.com/jmboehm/Fastcluster.jl.git")
+```
 
 ## Usage
 

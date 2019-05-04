@@ -41,6 +41,8 @@ answers[:centroid] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 answers[:median] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 1, 3, 1, 3, 1, 3, 1, 2, 1, 3, 1, 1, 3, 1, 1, 3, 1, 1, 1, 3, 1, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 4, 3, 3, 4, 1, 4, 3, 5, 3, 3, 3, 1, 1, 3, 3, 5, 4, 3, 3, 1, 4, 3, 3, 4, 3, 1, 3, 4, 4, 5, 3, 3, 1, 4, 3, 3, 1, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 1]
 answers[:ward] = [1, 2, 2, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 2, 1, 1, 2, 1, 2, 1, 1, 3, 3, 3, 4, 3, 4, 3, 2, 3, 2, 2, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 4, 2, 4, 4, 4, 4, 2, 4, 3, 4, 5, 3, 3, 5, 2, 5, 3, 5, 3, 3, 3, 4, 4, 3, 3, 5, 5, 4, 3, 4, 5, 3, 3, 5, 4, 4, 3, 5, 5, 5, 3, 3, 4, 5, 3, 3, 4, 3, 3, 3, 4, 3, 3, 3, 4, 3, 3, 4]
 
+@show answers
+
 for meth in [:single, :complete, :average, :weighted, :centroid, :median]
     println("Testing interface with method=:$(string(meth))...")
     for k in [5]
@@ -49,6 +51,7 @@ for meth in [:single, :complete, :average, :weighted, :centroid, :median]
         d = pairwise(Euclidean(), points, dims=1)
         m,h = Fastcluster.linkage(d, meth)
         c_fastcluster = Fastcluster.cutree(m,(length(m)>>1)+1,k)
+        @show c_fastcluster
         @test are_clusters_equal(c_fastcluster, answers[meth])
     end
     println("Ok.")
@@ -64,6 +67,7 @@ for meth in [:ward]
         m,h = Fastcluster.linkage(d, meth)
         c_fastcluster = Fastcluster.cutree(m,(length(m)>>1)+1,k)
         d2 = pairwise(Euclidean(), points, dims=1)
+        @show c_fastcluster
         @test are_clusters_equal(c_fastcluster, answers[meth])
     end
     println("Ok.")
