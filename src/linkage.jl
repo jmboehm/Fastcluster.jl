@@ -66,7 +66,7 @@ function linkage_ext(d::Array{T,2}, method::Symbol, preserve_input::Bool) where 
     #@cxx hclust_fast(nobs, pointer(d), mthidx[method], pointer(m), pointer(height) )
 
     # call the C function
-    t = ccall((:hclust_fast, "src/libfastcluster.so"),
+    t = ccall((:hclust_fast, libfastcluster),
         Int32,
         (Int32, Ptr{Cdouble},Int32, Ptr{Cdouble},Ptr{Cdouble}),
         nobs, d2, mthidx[method], m, height
@@ -99,7 +99,7 @@ function cutree(m::Vector{Int32}, nobs::Int64, k::Int64)
     # Cxx.jl version
     #@cxx cutree_k(nobs, pointer(m), k, pointer(labels))
 
-    t = ccall((:cutree_k, "src/libfastcluster.so"),
+    t = ccall((:cutree_k, libfastcluster),
         Int32,
         (Int32, Ptr{Cdouble}, Int32, Ptr{Cint}),
         nobs, m, k, labels
