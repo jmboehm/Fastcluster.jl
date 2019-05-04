@@ -6,12 +6,12 @@
 
 module Fastcluster
 
-    # Load in `deps.jl`, complaining if it does not exist
-    const depsjl_path = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
-    if !isfile(depsjl_path)
-        error("Fastcluster.jl not installed properly, run Pkg.build(\"Fastcluster\"), restart Julia and try again")
-    end
-    include(depsjl_path)
+    # # Load in `deps.jl`, complaining if it does not exist
+    # const depsjl_path = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
+    # if !isfile(depsjl_path)
+    #     error("Fastcluster.jl not installed properly, run Pkg.build(\"Fastcluster\"), restart Julia and try again")
+    # end
+    # include(depsjl_path)
 
     ##############################################################################
     ##
@@ -31,6 +31,9 @@ module Fastcluster
 
     # global const __pkgsrcdir = @__DIR__
     # global const __libfastcluster = joinpath(__pkgsrcdir, "../lib/libfastcluster.dylib")
+    global const __pkgsrcdir = @__DIR__
+    global const libfastcluster = joinpath(__pkgsrcdir, "../deps/usr/libfastcluster.so")
+
 
     ##############################################################################
     ##
@@ -49,7 +52,7 @@ module Fastcluster
     function __init__()
 
         # Always check your dependencies from `deps.jl`
-        check_deps()
+        #check_deps()
 
         # make sure that libfastcluster.so exists and can be called
         try
