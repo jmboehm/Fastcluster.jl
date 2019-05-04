@@ -1,6 +1,5 @@
 
 # TODO
-# - use `BinaryBuilder.jl` or something to host binaries
 # - add an interface via points & distance metrics
 # - get rid of `nobs` in `cutree()`
 

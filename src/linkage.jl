@@ -74,19 +74,6 @@ function linkage_ext(d::Array{T,2}, method::Symbol, preserve_input::Bool) where 
 
     return m, height
 
-    #
-    # o = Array{Int32,1}(undef, 2*(nobs-1))
-    # out = Base.unsafe_wrap(Array{Int32,1}, m, 2*(nobs-1))
-    #
-    #
-    # N = size(X,1)
-    # # get distances
-    # D = pairwise(metric, X, dims=1)
-    # Z = Array{Float64,2}(undef,N - 1, 4)
-    # if N > 1:
-    #     linkage_wrap(N, X, Z, mthidx[method])
-    # return Z
-
 end
 
 # This function returns the labels for the k-cluster cut.

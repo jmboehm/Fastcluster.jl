@@ -1,0 +1,123 @@
+`/bin/bash -c "alias ll='ls -la'
+
+vecho() {
+    if [[ \"false\" == \"true\" ]]; then
+        echo \"\$@\"
+    fi
+}
+vecho_red() {
+    (vecho \"\$@\" >&2)
+}
+
+# Save bash history (and optionally echo it out as it happens)
+save_history() {
+    vecho_red \" ---> \$BASH_COMMAND\"
+    history -s \"\$BASH_COMMAND\"
+    history -a
+}
+
+# Save our environment into \`/meta/.env\`, eliminating read-only variables
+# so that this file can be sourced upon entering a debug shell.
+save_env() {
+    set +x
+    set > /meta/.env
+    # Ignore read-only variables
+    for l in BASHOPTS BASH_VERSINFO UID EUID PPID SHELLOPTS; do
+        grep -v \"^\$l=\" /meta/.env > /meta/.env2
+        mv /meta/.env2 /meta/.env
+    done
+    echo \"cd \$(pwd)\" >> /meta/.env
+}
+
+# We do a little sleight-of-hand here; we want to build inside of a tmpfs
+# because \`srcdir\` might be mapped in through a networked filesystem, which
+# totally wrecks our I/O performance.  So what we do instead is bind-mount
+# \`srcdir\` to another location so that we can always get at it, copy its
+# contents to a new tmpfs we mount at the location of \`srcdir\`, then when
+# we exit on an error, we copy everything back over again
+tmpify_srcdir() {
+    vecho \"Copying srcdir to tmpfs...\"
+    mkdir -p \$WORKSPACE/.true_srcdir
+    mount --bind \$WORKSPACE/srcdir \$WORKSPACE/.true_srcdir
+    mount -t tmpfs tmpfs \$WORKSPACE/srcdir
+    rsync -rlptD \$WORKSPACE/.true_srcdir/ \$WORKSPACE/srcdir
+
+    # We may have changed what pwd() means out from underneath ourselves
+    cd \$(pwd)
+}
+
+# Copy our tmpfs version of \`srcdir\` back onto disk.
+save_srcdir() {
+    vecho_red \"Saving srcdir due to previous error...\"
+    rsync -rlptD \$WORKSPACE/srcdir/ \$WORKSPACE/.true_srcdir --delete
+}
+
+# If /meta is mounted, then we want to save history and environment
+if [[ -d /meta ]]; then
+    trap save_history DEBUG
+    trap \"save_env\" EXIT
+    trap \"save_env; save_srcdir\" INT TERM ERR
+fi
+
+# Stop if we hit any errors.
+set -e
+
+# Swap out srcdir from underneath our feet
+tmpify_srcdir
+
+if [ \$target != \"x86_64-apple-darwin14\" ]; then
+cd \$WORKSPACE/srcdir
+cd Fastcluster/
+./configure --prefix=\$prefix --host=\$target
+make
+make install
+make clean
+cp lib/libfastcluster.so \$prefix/libfastcluster.so
+exit
+fi
+
+if [ \$target = \"x86_64-apple-darwin14\" ]; then
+cd \$WORKSPACE/srcdir
+cd Fastcluster/
+sed -i '1d' Makefile.in 
+cat Makefile.in 
+./configure --prefix=\$prefix --host=\$target
+make
+make install
+make clean
+cp lib/libfastcluster.so \$prefix/libfastcluster.so
+exit
+fi
+
+"`
+CFLAGS=-I.
+LDFLAGS = -lm
+
+libfastcluster.so: fastcluster.o
+	$(CC) -shared -fPIC -o libfastcluster.so fastcluster.o -lstdc++ $(LDFLAGS)
+
+fastcluster.o: src/fastcluster.cpp
+	$(CC) -fPIC -c src/fastcluster.cpp -o fastcluster.o
+
+.PHONY: install
+install:
+	mkdir -p lib
+	mv libfastcluster.so lib/libfastcluster.so
+
+.PHONY: clean
+clean:
+	rm -f fastcluster.oconfigure: creating ./config.status
+config.status: creating Makefile
+/opt/x86_64-linux-gnu/tools/clang -target x86_64-apple-darwin14 --sysroot /opt/x86_64-apple-darwin14/x86_64-apple-darwin14/sys-root -fPIC -c src/fastcluster.cpp -o fastcluster.o
+In file included from src/fastcluster.cpp:19:
+src/fastcluster/fastcluster.cpp:53:9: warning: Use fenv header. If there is a warning about unknown #pragma STDC FENV_ACCESS, this can be ignored. [-W#pragma-messages]
+#pragma message("Use fenv header. If there is a warning about unknown #pragma STDC FENV_ACCESS, this can be ignored.")
+        ^
+src/fastcluster/fastcluster.cpp:54:26: warning: expected 'ON' or 'OFF' or 'DEFAULT' in pragma [-Wunknown-pragmas]
+#pragma STDC FENV_ACCESS on
+                         ^
+2 warnings generated.
+/opt/x86_64-linux-gnu/tools/clang -target x86_64-apple-darwin14 --sysroot /opt/x86_64-apple-darwin14/x86_64-apple-darwin14/sys-root -shared -fPIC -o libfastcluster.so fastcluster.o -lstdc++ -lm
+mkdir -p lib
+mv libfastcluster.so lib/libfastcluster.so
+rm -f fastcluster.o

@@ -54,5 +54,7 @@ if any(!satisfied(p; verbose=verbose) for p in products)
     end
 
     # Finally, write out a deps.jl file
+    # I'm commenting this out, since our library seems to have some
+    # issues with Libdl.dlopen(). But we don't really need it anyway.
     #write_deps_file(joinpath(@__DIR__, "deps.jl"), products)
 end

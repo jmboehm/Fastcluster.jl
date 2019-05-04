@@ -1,0 +1,1 @@
+`/opt/x86_64-apple-darwin14/bin/install_name_tool -id @rpath/libfastcluster.so libfastcluster.so`
