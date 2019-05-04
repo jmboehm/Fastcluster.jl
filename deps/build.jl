@@ -12,23 +12,32 @@ products = Product[
 # Download binaries from hosted location
 bin_prefix = "https://github.com/jmboehm/FastclusterBuilder/releases/download/0.0.1"
 download_info = Dict(
-    Linux(:aarch64, :glibc) => ("$bin_prefix/libfastcluster.v0.0.1.aarch64-linux-gnu.tar.gz", "36886ac25cf5678c01fe20630b413f9354b7a3721c6a2c2043162f7ebd147ff5"),
-    Linux(:armv7l, :glibc)  => ("$bin_prefix/libfastcluster.v0.0.1.arm-linux-gnueabihf.tar.gz", "147ebaeb1a722da43ee08705689aed71ac87c3c2c907af047c6721c0025ba383"),
-    Linux(:powerpc64le, :glibc) => ("$bin_prefix/libfastcluster.v0.0.1.powerpc64le-linux-gnu.tar.gz", "5c35295ac161272ada9a77d1f6b770e30ea864e521e31853258cbc36ad4c4468"),
-    Linux(:i686, :glibc)    => ("$bin_prefix/libfastcluster.v0.0.1.i686-linux-gnu.tar.gz", "97655b6a218d61284723b6923d7c96e6a256fa68b9419d723c588aa24404b102"),
-    Linux(:x86_64, :glibc)  => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-linux-gnu.tar.gz", "5208c63a9d07e592c78f541fc13caa8cd191b11e7e77b31d407237c2b13ec391"),
+    Linux(:aarch64, :glibc) => ("$bin_prefix/libfastcluster.v0.0.1.aarch64-linux-gnu.tar.gz", "1762bc297a6f2bd9eafd3e3da2d9ba5e56b502b6834d1a861fc0eee8a0be77d5"),
+    Linux(:armv7l, :glibc)  => ("$bin_prefix/libfastcluster.v0.0.1.arm-linux-gnueabihf.tar.gz", "9af5b1631a5e8ecf33dcf660d79270c7fe428ea6d3614e9d15a3c52f4bf16b70"),
+    Linux(:powerpc64le, :glibc) => ("$bin_prefix/libfastcluster.v0.0.1.powerpc64le-linux-gnu.tar.gz", "04708fc8f5e5cb9b5432a842d1c29f3a8739445f1613655b31350f7a461590b4"),
+    Linux(:i686, :glibc)    => ("$bin_prefix/libfastcluster.v0.0.1.i686-linux-gnu.tar.gz", "7154e6d81bf91df3e59e2d2e76243b62e098d4b45a8e4df1d5bf14d6d6857c06"),
+    Linux(:x86_64, :glibc)  => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-linux-gnu.tar.gz", "b167e77606216af5baaa58726b314b930944c1bb169c83dc93861eaa62a2adf8"),
 
-    Linux(:aarch64, :musl)  => ("$bin_prefix/libfastcluster.v0.0.1.aarch64-linux-musl.tar.gz", "81751477c1e3ee6c93e1c28ee7db2b99d1eed0d6ce86dc30d64c2e5dd4dfe88d"),
-    Linux(:armv7l, :musl)   => ("$bin_prefix/libfastcluster.v0.0.1.arm-linux-musleabihf.tar.gz", "bb65aad58f2e6fc39dc9688da1bca5e8103a3a3fa67dc589debbd2e98176f0e1"),
-    Linux(:i686, :musl)     => ("$bin_prefix/libfastcluster.v0.0.1.i686-linux-musl.tar.gz", "5f02fd1fe19f3a565fb128d3673b35c7b3214a101cef9dcbb202c0092438a87b"),
-    Linux(:x86_64, :musl)   => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-linux-musl.tar.gz", "ea630600a12d2c1846bc93bcc8d9638a4991f63329205c534d93e0a3de5f641d"),
+    Linux(:aarch64, :musl)  => ("$bin_prefix/libfastcluster.v0.0.1.aarch64-linux-musl.tar.gz", "ca945df0fe0248c7e84ff0035201de832e46941a67c1deaff38ad7411986e9f6"),
+    Linux(:armv7l, :musl)   => ("$bin_prefix/libfastcluster.v0.0.1.arm-linux-musleabihf.tar.gz", "2e92c3c3f31d7be9df268b6a39cfdaed796965187aad7c8dd2211737cd8d0df0"),
+    Linux(:i686, :musl)     => ("$bin_prefix/libfastcluster.v0.0.1.i686-linux-musl.tar.gz", "fab9df6f18f62550ea85690e3e3070de7fe9f9f6c991198953dae75d350ac878"),
+    Linux(:x86_64, :musl)   => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-linux-musl.tar.gz", "2d70eae69980f537abfe0395e5539ad46a0db3c5f402236931677829065ee55e"),
 
-    FreeBSD(:x86_64)        => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-unknown-freebsd11.1.tar.gz", "5f6edd6247b3685fa5c42c98a53d2a3e1eef6242c2bb3cdbb5fe23f538703fe4"),
-    MacOS(:x86_64)          => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-apple-darwin14.tar.gz", "fcc268772d6f21d65b45fcf3854a3142679b78e53c7673dac26c95d6ccc89a24"),
+    FreeBSD(:x86_64)        => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-unknown-freebsd11.1.tar.gz", "6d4f7d89656aeac60e889b470bd39986ede9d88d1ea351b02da5822f5dbbc55a"),
+    MacOS(:x86_64)          => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-apple-darwin14.tar.gz", "9c5ff18272a241df216885a45b76ec7b535ff0c9a0314ce7d8052ac7288f638f"),
 
-    Windows(:i686)          => ("$bin_prefix/libfastcluster.v0.0.1.i686-w64-mingw32.tar.gz", "79181cf62ca8e0b2e0851fa0ace52f4ab335d0cad26fb7f9cd4ff356a9a96e70"),
-    Windows(:x86_64)        => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-w64-mingw32.tar.gz", "7f8939e9529835b83810d3ae7e2556f6e002d571f619894e54ece42ea5262b7f"),
+    Windows(:i686)          => ("$bin_prefix/libfastcluster.v0.0.1.i686-w64-mingw32.tar.gz", "3926031d25e52f894ef89b5f65de4b9bc57aa09c80d2f6e9824353c5c6429c9d"),
+    Windows(:x86_64)        => ("$bin_prefix/libfastcluster.v0.0.1.x86_64-w64-mingw32.tar.gz", "74f873d6120ca95d7a4ef500c1f17d8636c5f1165452e4efccb8b66db0b0d921"),
 )
+# To get hashes:
+# function url2hash(url::String)
+#     path = download(url)
+#     open(io-> bytes2hex(BinaryProvider.sha256(io)), path)
+# end
+# for i in keys(download_info)
+#         @show url2hash(download_info[i][1])
+# end
+
 # First, check to see if we're all satisfied
 if any(!satisfied(p; verbose=verbose) for p in products)
     try
