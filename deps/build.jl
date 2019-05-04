@@ -35,12 +35,9 @@ download_info = Dict(
 #     open(io-> bytes2hex(BinaryProvider.sha256(io)), path)
 # end
 # for i in keys(download_info)
+#         @show i
 #         @show url2hash(download_info[i][1])
 # end
-for i in keys(download_info)
-        @show i
-        @show url2hash(download_info[i][1])
-end
 
 # First, check to see if we're all satisfied
 if any(!satisfied(p; verbose=verbose) for p in products)
