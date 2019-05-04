@@ -1,4 +1,3 @@
-using CxxWrap
 using BinaryProvider
 
 # Parse some basic command-line arguments
