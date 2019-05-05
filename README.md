@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/jmboehm/Fastcluster.jl.svg?branch=master)](https://travis-ci.org/jmboehm/Fastcluster.jl) [![Coverage Status](https://coveralls.io/repos/jmboehm/Fastcluster.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/jmboehm/Fastcluster.jl?branch=master) [![codecov.io](http://codecov.io/github/jmboehm/Fastcluster.jl/coverage.svg?branch=master)](http://codecov.io/github/jmboehm/Fastcluster.jl?branch=master)
 
-Julia wrapper to Daniel Muellner's [fastcluster](http://danifold.net/fastcluster.html) library for hierarchical clustering. Also builds on Christoph Dalitz's [C++ interface](https://lionel.kr.hs-niederrhein.de/~dalitz/data/hclust/index.html) to the library. See [LICENSE](http://github.com/Fastcluster.jl/LICENSE.md)
+Julia wrapper to Daniel Muellner's [fastcluster](http://danifold.net/fastcluster.html) library for hierarchical clustering.
 
 ## Installation
 
