@@ -75,11 +75,9 @@ df = dataset("datasets", "iris")
 
 
 
-R"r = getOption(\"repos\")
-r[\"CRAN\"] = \"http://cran.uk.r-project.org\"
-options(repos = r)
-rm(r)"
-R"install.packages(\"fastcluster\", lib = Sys.getenv(\"JL_PKG\"))"
+R".libPaths(c(.libPaths(), temp <- tempdir()))
+install.packages(\"fastcluster\", lib=temp, repos='http://cran.us.r-project.org')"
+#R"install.packages(\"fastcluster\", lib = Sys.getenv(\"JL_PKG\"))"
 
 # function to wrap R interface:
 function cluster_and_cut_R(d::Array{T,2}, method::Symbol, nclusters::Int64) where {T<:Real}
