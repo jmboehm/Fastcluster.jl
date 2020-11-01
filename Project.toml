@@ -1,0 +1,11 @@
+name = "Fastcluster"
+uuid = "a9785054-475b-425a-bb16-8fa97f65d561"
+authors = ["Johannes Boehm <johannes.boehm@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+BinaryProvider = "b99e7846-7c00-51b0-8f62-c81ae34c0232"
+
+[compat]
+BinaryProvider = "0.5"
+julia = "1"
