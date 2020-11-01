@@ -1,0 +1,15 @@
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
+RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
+RDatasets = "ce6b1742-4840-55fa-b093-852dadbb1d8b"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+RDatasets = "0.6"
+DataFrames = "0.21"
+Distances = "0.8"
+RCall = "0.13"
+
+[targets]
+test = ["Test", "RDatasets", "DataFrames", "Distances", "RCall"]
